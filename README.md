@@ -1,23 +1,22 @@
-# Contract Parser - Modular PDF Analysis System
+# Contract Parser
 
 A clean, modular system for extracting text from contract PDFs, chunking into clauses, generating embeddings, and enabling semantic search using Pinecone.
 
-## 🏗️ Architecture
+## ��️ Architecture
 
 The system is built with a modular, clean architecture:
 
-```
 pdf-parser/
-├── config.py              # Configuration management
-├── pdf_extractor.py       # PDF text extraction
-├── text_chunker.py        # Text chunking strategies
-├── embedding_service.py   # Embedding generation
-├── pinecone_service.py    # Vector database operations
-├── contract_parser.py     # Main orchestrator class
-├── main.py               # Demo and usage examples
-├── requirements.txt      # Dependencies
-└── README.md            # This file
-```
+├── config.py # Configuration management
+├── pdf_extractor.py # PDF text extraction
+├── text_chunker.py # Text chunking strategies
+├── embedding_service.py # Embedding generation
+├── pinecone_service.py # Vector database operations
+├── contract_parser.py # Main orchestrator class
+├── main.py # Demo and usage examples
+├── requirements.txt # Dependencies
+└── README.md # This file
+
 
 ## 📋 Requirements
 
@@ -89,12 +88,23 @@ parser = ContractParser(
 result = parser.process_contract("contract.pdf", chunking_strategy="sentences")
 ```
 
+### Single File Processing
+
+```python
+# Process one contract
+result = parser.process_contract("contract.pdf", chunking_strategy="sentences")
+```
+
 ### Batch Processing
 
 ```python
-# Process multiple contracts
+# Process multiple specific contracts
 pdf_paths = ["contract1.pdf", "contract2.pdf", "contract3.pdf"]
-results = parser.batch_process_contracts(pdf_paths, chunking_strategy="clauses")
+results = parser.batch_process_contracts(pdf_paths, chunking_strategy="sentences")
+
+# Process all PDFs in a directory
+from main import batch_process_contracts
+results = batch_process_contracts("contracts_folder", chunking_strategy="sentences")
 ```
 
 ### Interactive Search
@@ -102,6 +112,32 @@ results = parser.batch_process_contracts(pdf_paths, chunking_strategy="clauses")
 ```python
 # Run interactive search session
 parser.interactive_search()
+```
+
+## �� Processing Modes
+
+The system supports three processing modes:
+
+### 1. Single File Mode
+```python
+PROCESSING_MODE = "single"
+single_pdf_path = "test_pdfs/loan_contract.pdf"
+```
+
+### 2. Batch Files Mode
+```python
+PROCESSING_MODE = "batch"
+batch_pdf_paths = [
+    "test_pdfs/loan_contract.pdf",
+    "test_pdfs/trust_contract.pdf", 
+    "test_pdfs/credit_contract.pdf"
+]
+```
+
+### 3. Directory Mode
+```python
+PROCESSING_MODE = "directory"
+pdf_directory = "test_pdfs"  # Processes all PDFs in folder
 ```
 
 ## 🔍 Search Examples
@@ -128,13 +164,13 @@ results = parser.search_contract(
 
 ### 1. Clauses (Default)
 Splits text based on numbered clause patterns:
-```
+
 1. TERMINATION
-   This agreement may be terminated...
+This agreement may be terminated...
 
 2. PAYMENT TERMS
-   Payment shall be made...
-```
+Payment shall be made...
+
 
 ### 2. Sentences
 Splits text into sentence-based chunks with size limits.
@@ -158,6 +194,7 @@ Splits text based on paragraph boundaries.
 - Multiple chunking strategies
 - Configurable patterns
 - Chunk statistics and metadata
+- Automatic fallback to sentence chunking for large documents
 
 ### `embedding_service.py`
 - SentenceTransformer integration
@@ -174,55 +211,8 @@ Splits text based on paragraph boundaries.
 - Pipeline coordination
 - High-level API
 
-## 🔧 Customization
 
-### Custom Chunking Pattern
-
-```python
-from text_chunker import TextChunker
-
-# Custom pattern for your document format
-custom_pattern = r"(?:^|\n)(Article\s+\d+\.\s+[A-Z][^\n]+)"
-chunker = TextChunker(pattern=custom_pattern)
-```
-
-### Custom Embedding Model
-
-```python
-from embedding_service import EmbeddingService
-
-# Use a different model
-embedding_service = EmbeddingService(model_name="all-mpnet-base-v2")
-```
-
-### Custom Pinecone Configuration
-
-```python
-from pinecone_service import PineconeService
-
-# Custom Pinecone setup
-pinecone_service = PineconeService(
-    api_key="your-key",
-    environment="your-env",
-    index_name="custom-index"
-)
-```
-
-## 📝 Logging
-
-The system provides comprehensive logging:
-
-```python
-import logging
-
-# Set log level
-logging.basicConfig(level=logging.INFO)
-
-# Logs are written to both console and file
-# Check contract_parser.log for detailed logs
-```
-
-## 🧪 Testing
+## �� Testing
 
 ```python
 # Validate PDF before processing
@@ -237,56 +227,27 @@ stats = parser.get_contract_statistics()
 print(f"Index contains {stats['index_statistics']['total_vector_count']} vectors")
 ```
 
-## 🚨 Error Handling
+## 🚀 Quick Start Examples
 
-The system handles various error scenarios:
+### Single Contract
+```bash
+# Edit main.py: PROCESSING_MODE = "single"
+python main.py
+```
 
-- **Invalid PDF files**: Validation before processing
-- **Network issues**: Retry logic for Pinecone operations
-- **Empty documents**: Graceful handling of empty PDFs
-- **API limits**: Batch processing to avoid rate limits
+### Multiple Contracts
+```bash
+# Edit main.py: PROCESSING_MODE = "batch"
+python main.py
+```
 
-## 🔒 Security Notes
+### All PDFs in Directory
+```bash
+# Edit main.py: PROCESSING_MODE = "directory"
+python main.py
+```
 
-- Store API keys in environment variables
-- Never commit API keys to version control
-- Use appropriate Pinecone environment settings
-- Consider data privacy when processing sensitive contracts
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-1. **Pinecone API Key Error**
-   - Verify your API key is correct
-   - Check your Pinecone environment setting
-
-2. **PDF Extraction Fails**
-   - Ensure the PDF is not password-protected
-   - Check if the PDF contains extractable text
-
-3. **Embedding Model Download Fails**
-   - Check your internet connection
-   - Verify you have sufficient disk space
-
-4. **Memory Issues with Large PDFs**
-   - Use sentence or paragraph chunking instead of clauses
-   - Process PDFs in smaller batches
-
-### Getting Help
-
-- Check the logs in `contract_parser.log`
-- Verify your configuration in `config.py`
-- Ensure all dependencies are installed correctly 
+### Direct Batch Processing
+```bash
+python -c "from main import batch_process_contracts; batch_process_contracts('test_pdfs', 'sentences')"
+```
