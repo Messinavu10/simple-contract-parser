@@ -2,29 +2,13 @@
 
 A clean, modular system for extracting text from contract PDFs, chunking into clauses, generating embeddings, and enabling semantic search using Pinecone.
 
-## ��️ Architecture
-
-The system is built with a modular, clean architecture:
-
-pdf-parser/
-├── config.py # Configuration management
-├── pdf_extractor.py # PDF text extraction
-├── text_chunker.py # Text chunking strategies
-├── embedding_service.py # Embedding generation
-├── pinecone_service.py # Vector database operations
-├── contract_parser.py # Main orchestrator class
-├── main.py # Demo and usage examples
-├── requirements.txt # Dependencies
-└── README.md # This file
-
-
-## 📋 Requirements
+## Requirements
 
 - Python 3.8+
 - Pinecone account and API key
 - Internet connection (for downloading embedding models)
 
-## 🛠️ Installation
+## Installation
 
 1. **Clone the repository**:
    ```bash
@@ -44,7 +28,7 @@ pdf-parser/
    export INDEX_NAME="contract-clauses"
    ```
 
-## 📖 Usage
+## Usage
 
 ### Basic Usage
 
@@ -114,7 +98,7 @@ results = batch_process_contracts("contracts_folder", chunking_strategy="sentenc
 parser.interactive_search()
 ```
 
-## �� Processing Modes
+## Processing Modes
 
 The system supports three processing modes:
 
@@ -160,7 +144,7 @@ results = parser.search_contract(
 )
 ```
 
-## 📊 Chunking Strategies
+## Chunking Strategies
 
 ### 1. Clauses (Default)
 Splits text based on numbered clause patterns:
@@ -212,7 +196,7 @@ Splits text based on paragraph boundaries.
 - High-level API
 
 
-## �� Testing
+## Testing
 
 ```python
 # Validate PDF before processing
@@ -227,7 +211,7 @@ stats = parser.get_contract_statistics()
 print(f"Index contains {stats['index_statistics']['total_vector_count']} vectors")
 ```
 
-## 🚀 Quick Start Examples
+## Quick Start Examples
 
 ### Single Contract
 ```bash

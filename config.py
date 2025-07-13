@@ -11,7 +11,7 @@ class Config:
     
     # Pinecone settings
     pinecone_api_key: str = ""  # Set via .env file
-    pinecone_environment: str = ""  # Set via .env file (e.g., "gcp-starter")
+    pinecone_environment: str = ""  # Set via .env file
     index_name: str = "contract-clauses"
     
     # Embedding settings
